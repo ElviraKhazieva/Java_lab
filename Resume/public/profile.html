@@ -23,6 +23,10 @@
             text = response["profession"];
             $("#profession").append(text);
 
+            text = response["birthday"];
+            $("#birthday").append(text);
+
+            text = "";
             for(let i = 0; i < response["work_experience"].length; i++) {
                 text += ("<p>" + response["work_experience"][i] + "</p>");
             }
@@ -49,13 +53,14 @@
             text += "</ul>"
             $("#skills").append(text);
 
-            text = "<ul>"
+            text = ""
 
             for(let i = 0; i < response["contacts"].length; i++) {
                 text += ("<p>" + response["contacts"][i] + "</p>");
             }
             $("#contacts").append(text);
 
+            text = "";
            for(let i = 0; i < response["education"].length; i++) {
                 text += ("<p>" + response["education"][i] + "</p>");
            }
@@ -74,24 +79,27 @@
             <h2><b>Обо мне</b></h2>
             <h5>Photo of me:</h5>
             <img src="img/myph.jpg" class= "img-fluid rounded-circle"  width="70%">
-            <p>Дата рождения: 09.12.2001</p>
+            <p id = "birthday"></p>
         </div>
         <div class="col-8 ">
-            <h2>Опыт работы</h2>
+            <h2 class="bg-primary">Опыт работы</h2>
             <p id="work_experience"></p>
             <p id = "duties">Обязанности:</p>
         </div>
         <div class="w-100"></div>
-        <div class="col-4"><h2>Личные качества</h2><p id="personal_qualities"></p></div>
-        <div class="col-8"><h2>Навыки</h2><p id="skills"></p></div>
+        <div class="col-4"><h2 class="bg-primary">Личные качества</h2><p id="personal_qualities"></p></div>
+        <div class="col-8"><h2 class="bg-primary">Навыки</h2><p id="skills"></p></div>
         <div class="w-100"></div>
         <div class="col-4">
-            <h2>Контакты</h2>
+            <h2 class="bg-primary">Контакты</h2>
             <p id="contacts"></p>
             <a href="index2.html" class="btn btn-primary" role="button">Оставить заявку</a>
             <br>
         </div>
-        <div class="col-8"><h2>Образование</h2><p id="education"></p></div>
+        <div class="col-8">
+            <h2 class="bg-primary">Образование</h2>
+            <p id="education"></p>
+        </div>
     </div>
 </div>
 </body>
