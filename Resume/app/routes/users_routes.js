@@ -1,6 +1,7 @@
+bodyParser = require('body-parser').json();
 module.exports = function (app) {
     app.get('/profile', (request, response) => {
-        var result = {
+        let result = {
             "first_name": "Эльвира",
             "last_name": "Хазиева",
             "age" : "18",
@@ -38,7 +39,7 @@ module.exports = function (app) {
             ],
             "contacts": [
                 "Phone: 89120210392",
- 
+
                 "Email: Khaz.elvira@yandex.ru",
 
                 "Telegram: @khelvira",
@@ -47,5 +48,40 @@ module.exports = function (app) {
             ]
         };
         response.send(JSON.stringify(result));
+    });
+    app.post('/resume', bodyParser, (request, response) => {
+        let body = request.body;
+        const {Client} = require('pg');
+        const client = new Client({
+            user: 'postgres',
+            host: 'localhost',
+            password: 'Qwer1234',
+            database: 'requests'
+        });
+        const req = 'insert into messages (message_text) values ($1) returning *';
+        client.connect();
+        client.query(req,
+            [body['message_text']],
+            (err, data) => {
+                response.setHeader("Content-Type", "application/json");
+                response.send(JSON.stringify(data.rows));
+                client.end();
+            });
+    });
+
+    app.get('/resume', (request, response) => {
+        const { Client } = require('pg');
+        const client = new Client({
+            user: 'postgres',
+            host: 'localhost',
+            password: 'Qwer1234',
+            database: 'requests'
+        });
+        client.connect();
+        client.query('select message_text from messages', (err, data) => {
+            response.setHeader("Content-Type", "application/json");
+            response.send(JSON.stringify(data.rows));
+            client.end();
+        });
     });
 };
