@@ -1,9 +1,0 @@
-GET localhost:80/resume
-###
-POST localhost:80/resume
-Content-Type: application/json
-
-{
-  "message_text": "test"
-}
-
