@@ -8,6 +8,6 @@ import java.util.Optional;
 
 public interface UsersRepository extends CrudRepository<User, Long> {
     List<User> findAllByAge(int age);
-    User find(String login);
+    Optional<User> findByEmail(String email);
     User findUserByUuid(String uuid);
 }

@@ -20,7 +20,7 @@ public class User {
     private Integer age;
     private String groupNumber;
     private String email;
-    private String password;
+    private String hashPassword;
 
 }
 

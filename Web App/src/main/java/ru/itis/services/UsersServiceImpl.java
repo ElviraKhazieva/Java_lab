@@ -1,32 +1,39 @@
 package ru.itis.services;
 
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import ru.itis.models.CookieValue;
 import ru.itis.models.User;
 import ru.itis.repositories.CookieValuesRepository;
 import ru.itis.repositories.UsersRepository;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.Builder;
-
-@Getter
-@Setter
-@Builder
-
+@Service
 public class UsersServiceImpl implements UsersService {
 
+    @Autowired
+ // @Qualifier(value = "usersRepositoryJdbcTemplateImpl") - уточнить, какой именно бин нужен из тех, что реализуют UsersRepository)
     private UsersRepository usersRepository;
+    @Autowired
     private CookieValuesRepository cookieValuesRepository;
-    PasswordEncoder passwordEncoder;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
 
-
-    @Override
-    public void addUser(User user) {
-        usersRepository.save(user);
-    }
+//    public UsersServiceImpl(UsersRepository usersRepository, CookieValuesRepository cookieValuesRepository, PasswordEncoder passwordEncoder) {
+//        this.usersRepository = usersRepository;
+//        this.cookieValuesRepository = cookieValuesRepository;
+//        this.passwordEncoder = passwordEncoder;
+//    }
+//    @Override
+//    public void addUser(User user) {
+//        usersRepository.save(user);
+//    }
 
     @Override
     public List<User> getAllUsers() {
@@ -39,8 +46,8 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public User getUserByLogin(String login) {
-        return usersRepository.find(login);
+    public Optional<User> getUserByEmail(String email) {
+            return usersRepository.findByEmail(email);
     }
 
     @Override
@@ -52,11 +59,10 @@ public class UsersServiceImpl implements UsersService {
 //    public void addUserCookie(CookieValue cookieValue) {
 //        cookieValuesRepository.save(cookieValue);
 //    }
-
-    @Override
-    public CookieValue getCookieValue(Long id, String name) {
-        return cookieValuesRepository.findCookieByIdAndName(id, name);
-    }
+//    @Override
+//    public CookieValue getCookieValue(Long id, String name) {
+//        return cookieValuesRepository.findCookieByIdAndName(id, name);
+//    }
 
     @Override
     public String getHashPassword(String password) {
@@ -68,40 +74,26 @@ public class UsersServiceImpl implements UsersService {
         return passwordEncoder.matches(password, hashPassword);
     }
 
-    /*public String authorize(String login, String password) {
-        User user = usersRepository.find(login);
-        if ((user != null) && (checkPassword(password, user.getPassword()))) {
-           String uuid = UUID.randomUUID().toString();
-           CookieValue cookieValue = CookieValue.builder()
-                   .name("Auth")
-                   .value(uuid)
-                   .user(user)
-                   .build();
-           cookieValuesRepository.save(cookieValue);
-           return uuid;
-        } else {
-            return null;
-        }
-    }*/
-
     public String authorize(String login, String password) {
-        User user = usersRepository.find(login);
-        if ((user != null) && (checkPassword(password, user.getPassword()))) {
-           String uuid = UUID.randomUUID().toString();
-           CookieValue cookieValue = CookieValue.builder()
-                   .name("Auth")
-                   .value(uuid)
-                   .user(user)
-                   .build();
-           cookieValuesRepository.update(cookieValue);
-           return uuid;
-        } else {
-            return null;
+        Optional<User> optionalUser = usersRepository.findByEmail(login);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            if (checkPassword(password, user.getHashPassword())) {
+                String uuid = UUID.randomUUID().toString();
+                CookieValue cookieValue = CookieValue.builder()
+                        .name("Auth")
+                        .value(uuid)
+                        .user(user)
+                        .build();
+                cookieValuesRepository.update(cookieValue);
+                return uuid;
+            }
         }
+        return null;
     }
 
-
     public String register(User user) {
+        usersRepository.save(user);
         String uuid = UUID.randomUUID().toString();
         CookieValue cookieValue = CookieValue.builder()
                 .name("Auth")
@@ -112,9 +104,7 @@ public class UsersServiceImpl implements UsersService {
         return uuid;
     }
 
-
-
-    public boolean isAuthenticated(String cookie) {
+    public boolean authenticateCookie(String cookie) {
         return cookieValuesRepository.cookieExist(cookie);
     }
 

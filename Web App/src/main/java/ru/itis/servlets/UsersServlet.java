@@ -1,5 +1,6 @@
 package ru.itis.servlets;
 
+import org.springframework.context.ApplicationContext;
 import ru.itis.models.User;
 import ru.itis.services.UsersService;
 import javax.servlet.ServletConfig;
@@ -21,7 +22,9 @@ public class UsersServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         ServletContext servletContext = config.getServletContext();
-        this.usersService = (UsersService) servletContext.getAttribute("usersService");
+        ApplicationContext applicationContext = (ApplicationContext) servletContext.getAttribute("applicationContext");
+        usersService = applicationContext.getBean(UsersService.class);
+        //this.usersService = (UsersService) servletContext.getAttribute("usersService");
     }
 
     @Override

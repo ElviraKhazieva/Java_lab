@@ -1,6 +1,7 @@
 package ru.itis.servlets;
 
 
+import org.springframework.context.ApplicationContext;
 import ru.itis.models.User;
 import ru.itis.services.UsersService;
 import javax.servlet.ServletConfig;
@@ -18,8 +19,10 @@ public class RegistrationServlet extends HttpServlet {
     @Override
     public void init(ServletConfig config) throws ServletException {
         ServletContext servletContext = config.getServletContext();
-        this.usersService = (UsersService) servletContext.getAttribute("usersService");
-        //PasswordEncoder passwordEncoder = (PasswordEncoder) servletContext.getAttribute("passwordEncoder");
+        ApplicationContext applicationContext = (ApplicationContext) servletContext.getAttribute("applicationContext");
+        usersService = applicationContext.getBean(UsersService.class);
+        //this.usersService = (UsersService) servletContext.getAttribute("usersService");
+
     }
 
     @Override
@@ -41,18 +44,14 @@ public class RegistrationServlet extends HttpServlet {
                 .age(Integer.parseInt(age))
                 .groupNumber(groupNumber)
                 .email(email)
-                .password(hashPassword)
+                .hashPassword(hashPassword)
                 .build();
-        usersService.addUser(user);
-        //////////////////////
         String uuid = usersService.register(user);
         Cookie cookie = new Cookie("Auth", uuid);
         cookie.setMaxAge(60 * 60 * 24 * 365);
         response.addCookie(cookie);
-        /*!!*/HttpSession session = request.getSession();
-        /*!!*/session.setAttribute("User", user);
+        HttpSession session = request.getSession();
+        session.setAttribute("User", user);
         response.sendRedirect( request.getContextPath() + "/profile");
-        ////////////////////
-        //response.sendRedirect(request.getContextPath() + "/login");
     }
 }
