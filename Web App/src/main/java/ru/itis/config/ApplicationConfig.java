@@ -12,20 +12,17 @@ import org.springframework.core.env.Environment;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import ru.itis.repositories.CookieValuesRepository;
-import ru.itis.repositories.CookieValuesRepositoryJdbcImpl;
-import ru.itis.repositories.UsersRepository;
-import ru.itis.repositories.UsersRepositoryJdbcTemplateImpl;
-import ru.itis.services.UsersService;
-import ru.itis.services.UsersServiceImpl;
+import freemarker.cache.FileTemplateLoader;
 import javax.sql.DataSource;
+import java.io.File;
+import java.io.IOException;
 
 @Configuration
 @PropertySource("classpath:db.properties")
 @ComponentScan(basePackages = "ru.itis")
 public class ApplicationConfig {
     @Autowired
-    private  Environment environment;
+    public  Environment environment;
 
 //    @Bean
 //    public UsersService usersService() {
@@ -70,6 +67,14 @@ public class ApplicationConfig {
         hikariConfig.setPassword(environment.getProperty("db.password"));
         hikariConfig.setDriverClassName(environment.getProperty("db.driver.classname"));
         return hikariConfig;
+    }
+
+    @Bean
+    public freemarker.template.Configuration freemarkerConfiguration() throws IOException {
+        freemarker.template.Configuration configuration = new freemarker.template.Configuration(freemarker.template.Configuration.VERSION_2_3_30);
+        configuration.setDefaultEncoding("UTF-8");
+        configuration.setTemplateLoader(new FileTemplateLoader(new File("C:/Users/user/Documents/Java_lab/Web App/src/main/resources")));
+        return configuration;
     }
 
 }

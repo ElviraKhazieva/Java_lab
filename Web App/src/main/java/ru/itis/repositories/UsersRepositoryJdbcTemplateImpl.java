@@ -40,6 +40,8 @@ public class UsersRepositoryJdbcTemplateImpl implements UsersRepository {
             .id(row.getLong("id"))
             .firstName(row.getString("first_name"))
             .lastName(row.getString("last_name"))
+            .email(row.getString("email"))
+            .groupNumber(row.getString("group_number"))
             .age(row.getInt("age"))
             .build();
 

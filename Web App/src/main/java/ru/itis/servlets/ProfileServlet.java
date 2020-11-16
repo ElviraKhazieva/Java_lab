@@ -1,19 +1,57 @@
 package ru.itis.servlets;
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
+
+
+import freemarker.template.Configuration;
+import freemarker.template.Template;
+import lombok.SneakyThrows;
+import org.springframework.context.ApplicationContext;
+import ru.itis.models.User;
+
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @WebServlet("/profile")
 public class ProfileServlet extends HttpServlet {
 
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+   // private  UsersService usersService;
+    public   Template template;
 
-        request.getRequestDispatcher("WEB-INF/jsp/profile.jsp").forward(request, response);
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        ServletContext servletContext = config.getServletContext();
+        ApplicationContext applicationContext = (ApplicationContext) servletContext.getAttribute("applicationContext");
+        //usersService = applicationContext.getBean(UsersService.class);
+        Configuration configuration = applicationContext.getBean(freemarker.template.Configuration.class);
+        try {
+            template = configuration.getTemplate("profile.ftlh");
+        } catch (IOException e) {
+           throw new IllegalStateException(e);
+        }
+    }
+
+    @SneakyThrows
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+        HttpSession session = request.getSession();
+        User user = (User) session.getAttribute("User");
+        Map<String, Object> attributes = new HashMap<>();
+        attributes.put("user", user);
+//      FileWriter fileWriter = new FileWriter("output.txt");
+        FileWriter fileWriter = new FileWriter("C:/Users/user/Documents/Java_lab/Web App/src/main/webapp/WEB-INF/profile.html");
+        template.process(attributes, fileWriter);
+        request.getRequestDispatcher("/WEB-INF/profile.html").forward(request, response);
+       // request.getRequestDispatcher("WEB-INF/jsp/profile.jsp").forward(request, response);
     }
 
     @Override
