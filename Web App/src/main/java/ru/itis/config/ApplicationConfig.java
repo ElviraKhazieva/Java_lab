@@ -70,11 +70,26 @@ public class ApplicationConfig {
     }
 
     @Bean
-    public freemarker.template.Configuration freemarkerConfiguration() throws IOException {
+    public freemarker.template.Configuration freemarkerConfiguration() {
         freemarker.template.Configuration configuration = new freemarker.template.Configuration(freemarker.template.Configuration.VERSION_2_3_30);
         configuration.setDefaultEncoding("UTF-8");
-        configuration.setTemplateLoader(new FileTemplateLoader(new File("C:/Users/user/Documents/Java_lab/Web App/src/main/resources")));
+        //configuration.setTemplateLoader(new FileTemplateLoader(new File("C:/Users/user/Documents/Java_lab/Web App/src/main/resources")));
+        configuration.setTemplateLoader(fileTemplateLoader());
         return configuration;
+    }
+
+    @Bean
+    public FileTemplateLoader fileTemplateLoader() {
+        try {
+            return new FileTemplateLoader(file());
+        } catch (IOException e) {
+            throw new IllegalArgumentException(e);
+        }
+    }
+
+    @Bean
+    public File file() {
+        return new File("C:/Users/user/Documents/Java_lab/Web App/src/main/webapp/WEB-INF/ftl");
     }
 
 }

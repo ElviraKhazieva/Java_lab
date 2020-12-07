@@ -2,7 +2,7 @@ package ru.itis.servlets;
 
 import freemarker.template.Configuration;
 import freemarker.template.Template;
-import lombok.SneakyThrows;
+import freemarker.template.TemplateException;
 import org.springframework.context.ApplicationContext;
 import ru.itis.models.User;
 import ru.itis.services.UsersService;
@@ -13,6 +13,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.*;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.*;
 
 @WebServlet("/users")
@@ -35,19 +36,32 @@ public class UsersServlet extends HttpServlet {
         }
     }
 
-    @SneakyThrows
+
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-//        System.out.println(usersService.getAllUsers());
-//        System.out.println(usersService.getUsersWithAge(19));
         List<User> users = usersService.getAllUsers();
         Map<String, Object> attributes = new HashMap<>();
         attributes.put("users", users);
-//      FileWriter fileWriter = new FileWriter("users.txt");
-        FileWriter fileWriter = new FileWriter("C:/Users/user/Documents/Java_lab/Web App/src/main/webapp/WEB-INF/users.html");
-        template.process(attributes, fileWriter);
-        request.getRequestDispatcher("/WEB-INF/users.html").forward(request, response);
-        // request.getRequestDispatcher("WEB-INF/jsp/profile.jsp").forward(request, response);
+        PrintWriter writer = response.getWriter();
+        try {
+            template.process(attributes, writer);
+        } catch (TemplateException e) {
+            throw new IllegalStateException(e);
+        }
+        writer.close();
+        
+        /* другой вариант - не очень
+        //FileWriter fileWriter = new FileWriter("users.txt");
+        FileWriter fileWriter = new FileWriter("C:/Users/user/Documents/Java_lab/Web App/src/main/webapp/WEB-INF/html/users.html");
+        try {
+            template.process(attributes, fileWriter);
+        } catch (TemplateException e) {
+            throw new IllegalStateException(e);
+        }
+        request.getRequestDispatcher("/WEB-INF/html/users.html").forward(request, response);
+        */
+        
+        
     }
 
     @Override

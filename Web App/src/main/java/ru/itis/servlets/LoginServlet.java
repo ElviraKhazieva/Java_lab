@@ -33,6 +33,7 @@ public class LoginServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+
        String login = request.getParameter("login");
        String password = request.getParameter("password");
         String uuid = usersService.authorize(login, password);
@@ -42,7 +43,7 @@ public class LoginServlet extends HttpServlet {
             response.addCookie(cookie);
             HttpSession session = request.getSession();
             User user = usersService.getUserByUuid(uuid);
-            session.setAttribute("User", user);
+            session.setAttribute("User", user);    
             response.sendRedirect( request.getContextPath() + "/profile");
         } else {
             response.sendRedirect( request.getContextPath() + "/registration");
