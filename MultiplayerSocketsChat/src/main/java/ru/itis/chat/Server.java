@@ -1,6 +1,7 @@
 package ru.itis.chat;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -18,6 +19,18 @@ public class Server {
 
     public ArrayList<Connection> getConnections() {
         return connections;
+    }
+
+    public void sendMessageToAllClients(String message) {
+        PrintWriter toClients = null;
+        for (Connection connection : connections) {
+            try {
+                toClients = new PrintWriter(connection.getClient().getOutputStream(), true);
+            } catch (IOException e) {
+                throw new IllegalStateException(e);
+            }
+            toClients.println(message);
+        }
     }
 
     public void start() {

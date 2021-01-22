@@ -24,20 +24,12 @@ public class Connection implements Runnable {
         return client;
     }
 
-    public Server getServer() {
-        return server;
-    }
-
     public void run() {
         try {
             BufferedReader fromClient = new BufferedReader(new InputStreamReader(client.getInputStream()));
-            ArrayList<Connection> connections = server.getConnections();
             String messageFromClient = fromClient.readLine();
             while (messageFromClient != null) {
-                for (int i = 0; i < connections.size(); i++) {
-                    PrintWriter toClients = new PrintWriter(connections.get(i).getClient().getOutputStream(), true);
-                    toClients.println(messageFromClient);
-                }
+                server.sendMessageToAllClients(messageFromClient);
                 messageFromClient = fromClient.readLine();
             }
         } catch (IOException e) {

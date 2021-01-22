@@ -12,7 +12,6 @@ public class SocketClient {
     private BufferedReader fromServer;
 
     public SocketClient(String host, int port) {
-
         try {
             client = new Socket(host, port);
             toServer = new PrintWriter(client.getOutputStream(), true);

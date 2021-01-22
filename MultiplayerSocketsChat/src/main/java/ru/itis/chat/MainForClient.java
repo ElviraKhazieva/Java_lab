@@ -17,10 +17,9 @@ public class MainForClient {
 
         SocketClient client = new SocketClient(args.serverIp , args.serverPort);
         Scanner scanner = new Scanner(System.in);
-        System.out.println("Перед тем, как начать общаться в чате, введите первым сообщением свое имя.");
         System.out.println("Введите ваше имя: ");
         String name  = scanner.nextLine();
-        System.out.println("Ниже вы можете написать ваши сообщения: ");
+        System.out.println("Теперь вы можете отправлять ваши сообщения! ");
 
         while (true) {
             String message = scanner.nextLine();
