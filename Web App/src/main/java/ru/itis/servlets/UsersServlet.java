@@ -27,7 +27,6 @@ public class UsersServlet extends HttpServlet {
         ServletContext servletContext = config.getServletContext();
         ApplicationContext applicationContext = (ApplicationContext) servletContext.getAttribute("applicationContext");
         usersService = applicationContext.getBean(UsersService.class);
-        //this.usersService = (UsersService) servletContext.getAttribute("usersService");
         Configuration configuration = applicationContext.getBean(freemarker.template.Configuration.class);
         try {
             template = configuration.getTemplate("users.ftlh");
@@ -49,19 +48,6 @@ public class UsersServlet extends HttpServlet {
             throw new IllegalStateException(e);
         }
         writer.close();
-        
-        /* другой вариант - не очень
-        //FileWriter fileWriter = new FileWriter("users.txt");
-        FileWriter fileWriter = new FileWriter("C:/Users/user/Documents/Java_lab/Web App/src/main/webapp/WEB-INF/html/users.html");
-        try {
-            template.process(attributes, fileWriter);
-        } catch (TemplateException e) {
-            throw new IllegalStateException(e);
-        }
-        request.getRequestDispatcher("/WEB-INF/html/users.html").forward(request, response);
-        */
-        
-        
     }
 
     @Override

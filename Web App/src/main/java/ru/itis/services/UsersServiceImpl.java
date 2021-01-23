@@ -13,13 +13,13 @@ import ru.itis.repositories.CookieValuesRepository;
 import ru.itis.repositories.UsersRepository;
 import java.util.List;
 import java.util.Optional;
-import java.util.UUID;
+
 
 @Service
 public class UsersServiceImpl implements UsersService {
 
+    // @Qualifier(value = "usersRepositoryJdbcTemplateImpl") - уточнить, какой именно бин нужен из тех, что реализуют UsersRepository)
     @Autowired
- // @Qualifier(value = "usersRepositoryJdbcTemplateImpl") - уточнить, какой именно бин нужен из тех, что реализуют UsersRepository)
     private UsersRepository usersRepository;
     @Autowired
     private CookieValuesRepository cookieValuesRepository;
@@ -52,8 +52,13 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public void update(User user) {
-        usersRepository.update(user);
+    public boolean authenticateCookie(String cookie) {
+        return cookieValuesRepository.cookieExist(cookie);
+    }
+
+    @Override
+    public User getUserByUuid(String uuid) {
+        return usersRepository.findUserByUuid(uuid);
     }
 
 //    @Override
@@ -65,51 +70,4 @@ public class UsersServiceImpl implements UsersService {
 //        return cookieValuesRepository.findCookieByIdAndName(id, name);
 //    }
 
-    @Override
-    public String getHashPassword(String password) {
-        return passwordEncoder.encode(password);
-    }
-
-    @Override
-    public boolean checkPassword(String password, String hashPassword) {
-        return passwordEncoder.matches(password, hashPassword);
-    }
-
-    public String authorize(String login, String password) {
-        Optional<User> optionalUser = usersRepository.findByEmail(login);
-        if (optionalUser.isPresent()) {
-            User user = optionalUser.get();
-            if (checkPassword(password, user.getHashPassword())) {
-                String uuid = UUID.randomUUID().toString();
-                CookieValue cookieValue = CookieValue.builder()
-                        .name("Auth")
-                        .value(uuid)
-                        .user(user)
-                        .build();
-                cookieValuesRepository.update(cookieValue);
-                return uuid;
-            }
-        }
-        return null;
-    }
-
-    public String register(User user) {
-        usersRepository.save(user);
-        String uuid = UUID.randomUUID().toString();
-        CookieValue cookieValue = CookieValue.builder()
-                .name("Auth")
-                .value(uuid)
-                .user(user)
-                .build();
-        cookieValuesRepository.save(cookieValue);
-        return uuid;
-    }
-
-    public boolean authenticateCookie(String cookie) {
-        return cookieValuesRepository.cookieExist(cookie);
-    }
-
-    public User getUserByUuid(String uuid) {
-        return usersRepository.findUserByUuid(uuid);
-    }
 }

@@ -10,29 +10,28 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.min.js" integrity="sha384-w1Q4orYjBQndcko6MimVbzY0tgp4pWB4lZ7lr30WKz0vr/aWKhXdBNmNb5D92v7s" crossorigin="anonymous"></script>
 </head>
 <body>
+    <div class="container">
+        <form action="${pageContext.request.contextPath}/login" method="post">
+                <h1>Авторизация</h1>
+                <div class="form-group">
+                    <label for="email">Email address</label>
+                    <input name="email" type="email" class="form-control" id="email" placeholder="Введите email">
+                </div>
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input name="password" type="password" class="form-control" id="password" placeholder="Введите пароль">
+                </div>
+                <!--<input name="login" placeholder="Type your login"><br>
+                <input type="password" name="password" placeholder="Type your password"><br>
+                <input type="submit" value="Войти"> -->
+                <input type="submit" value="Войти" class="btn btn-primary">
 
-    <form action="http://localhost:8080/Web_App_war/login" method="post">
-        <div class="container">
-            <h1>Авторизация</h1>
-            <div class="form-group">
-                <label for="email">Email adress</label>
-                <input name="login" type="email" class="form-control" id="email" placeholder="Введите email">
-            </div>
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input name="password" type="password" class="form-control" id="password" placeholder="Введите пароль">
-            </div>
-            <!--<input name="login" placeholder="Type your login"><br>
-            <input type="password" name="password" placeholder="Type your password"><br>
-            <input type="submit" value="Войти"> -->
-            <input type="submit" value="Войти" class="btn btn-primary">
-            <a href="${pageContext.request.contextPath}/registration">
-                <button type="submit" class="btn btn-primary">Регистрация</button>
-            </a>
+        </form>
 
-        </div>
-    </form>
-
+    <a href="${pageContext.request.contextPath}/registration">
+        <button type="submit" class="btn btn-primary">Регистрация</button>
+    </a>
+    </div>
 </body>
 
 </html>

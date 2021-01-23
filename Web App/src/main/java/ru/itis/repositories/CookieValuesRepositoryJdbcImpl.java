@@ -13,12 +13,16 @@ import java.util.*;
 
 @Repository
 public class CookieValuesRepositoryJdbcImpl implements CookieValuesRepository {
+
     //language=PostgreSQL
     private static final String SQL_SELECT_COOKIE_BY_STUDENT_ID_AND_COOKIE_NAME= "select * from users_cookie where student_id = :studentId and name = :name";
+
     //language=PostgreSQL
     private static final String SQL_SELECT_COOKIE_BY_COOKIE_VALUE = "select * from users_cookie where value = :value ";
+
     //language=PostgreSQL
-    private static final String SQL_UPDATE_COOKIE= "update users_cookie set name = :name, value = :value where student_id = :stidentId";
+    private static final String SQL_UPDATE_COOKIE= "update users_cookie set name = :name, value = :value where student_id = :studentId";
+
     //language=PostgreSQL
     private static final String SQL_INSERT_INTO_USERS_COOKIE = "insert into users_cookie (student_id, name, value) values (:studentId, :name, :value )";
 

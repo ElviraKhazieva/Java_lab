@@ -8,28 +8,26 @@ import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
 @WebFilter("*")
 public class SessionFilter implements Filter {
 
-    private ServletContext servletContext;
     private UsersService usersService;
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-        servletContext = filterConfig.getServletContext();
+        ServletContext servletContext = filterConfig.getServletContext();
         ApplicationContext applicationContext = (ApplicationContext) servletContext.getAttribute("applicationContext");
         usersService = applicationContext.getBean(UsersService.class);
-        //usersService = (UsersService) servletContext.getAttribute("usersService");
     }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         HttpServletResponse response = (HttpServletResponse) servletResponse;
-        if (request.getRequestURI().startsWith(request.getContextPath() + "/login") || (request.getRequestURI().startsWith(request.getContextPath() + "/registration"))) {
+        String context = request.getContextPath();
+        if (!isProtected(context, request.getRequestURI())) {
             filterChain.doFilter(servletRequest, servletResponse);
         } else {
             if (request.getSession(false) != null) {
@@ -37,21 +35,40 @@ public class SessionFilter implements Filter {
                 if (user != null) {
                     filterChain.doFilter(servletRequest, servletResponse);
                     return;
+                } else {
+                    if (checkCookie(request)){
+                        filterChain.doFilter(servletRequest, servletResponse);
+                        return;
+                    }
                 }
             } else {
-                Cookie [] cookies = request.getCookies();
-                if (cookies != null) {
-                    for (Cookie cookie : cookies) {
-                        if ((cookie.getName().equals("Auth")) && (usersService.authenticateCookie(cookie.getValue()))) {
-                            request.getSession().setAttribute("User", usersService.getUserByUuid(cookie.getValue()));
-                            filterChain.doFilter(servletRequest, servletResponse);
-                            return;
-                        }
-                    }
+                if (checkCookie(request)){
+                    filterChain.doFilter(servletRequest, servletResponse);
+                    return;
                 }
             }
             response.sendRedirect(request.getContextPath() + "/login");
         }
+    }
+
+    private boolean checkCookie(HttpServletRequest request) {
+        Cookie [] cookies = request.getCookies();
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ((cookie.getName().equals("Auth")) && (usersService.authenticateCookie(cookie.getValue()))) {
+                    request.getSession().setAttribute("User", usersService.getUserByUuid(cookie.getValue()));
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean isProtected(String contextPath, String path) {
+        return !path.startsWith(contextPath + "/login") &&
+                !path.startsWith(contextPath + "/registration") &&
+                !path.startsWith(contextPath + "/favicon.ico") &&
+                !path.startsWith(contextPath + "/images");
     }
 
 

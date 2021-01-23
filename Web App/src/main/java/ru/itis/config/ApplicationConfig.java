@@ -21,28 +21,15 @@ import java.io.IOException;
 @PropertySource("classpath:db.properties")
 @ComponentScan(basePackages = "ru.itis")
 public class ApplicationConfig {
+
     @Autowired
     public  Environment environment;
-
-//    @Bean
-//    public UsersService usersService() {
-//        return new UsersServiceImpl(usersRepository(), cookieValuesRepository(), passwordEncoder());
-//    }
 
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
-//    @Bean
-//    public CookieValuesRepository cookieValuesRepository() {
-//        return new CookieValuesRepositoryJdbcImpl(namedParameterJdbcTemplate(), usersRepository());
-//    }
-
-//    @Bean
-//    public UsersRepository usersRepository() {
-//        return new UsersRepositoryJdbcTemplateImpl(namedParameterJdbcTemplate());
-//    }
     @Bean//(value = "jdbcTemplate") - сами задаем id бину
     public NamedParameterJdbcTemplate namedParameterJdbcTemplate() {
         return new NamedParameterJdbcTemplate(dataSource());
@@ -73,7 +60,6 @@ public class ApplicationConfig {
     public freemarker.template.Configuration freemarkerConfiguration() {
         freemarker.template.Configuration configuration = new freemarker.template.Configuration(freemarker.template.Configuration.VERSION_2_3_30);
         configuration.setDefaultEncoding("UTF-8");
-        //configuration.setTemplateLoader(new FileTemplateLoader(new File("C:/Users/user/Documents/Java_lab/Web App/src/main/resources")));
         configuration.setTemplateLoader(fileTemplateLoader());
         return configuration;
     }

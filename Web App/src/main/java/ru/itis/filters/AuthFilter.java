@@ -20,7 +20,6 @@ public class AuthFilter implements Filter {
         servletContext = filterConfig.getServletContext();
         ApplicationContext applicationContext = (ApplicationContext) servletContext.getAttribute("applicationContext");
         usersService = applicationContext.getBean(UsersService.class);
-        //usersService = (UsersService) servletContext.getAttribute("usersService");
     }
 
     @Override

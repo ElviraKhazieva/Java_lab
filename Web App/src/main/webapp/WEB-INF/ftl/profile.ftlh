@@ -26,7 +26,7 @@
                     <a href="#" class="list-group-item list-group-item-action active">
                        Profile
                     </a>
-                    <a href="/Web_App_war/users" class="list-group-item list-group-item-action">Users</a>
+                    <a href="/users" class="list-group-item list-group-item-action">Users</a>
                     <a href="#" class="list-group-item list-group-item-action">Messages</a>
                     <a href="#" class="list-group-item list-group-item-action">Communities</a>
                     <a href="#" class="list-group-item list-group-item-action">Photos</a>
@@ -38,7 +38,7 @@
                     <div class="row">
                         <div class="col-sm-6">
                             <h2>${user.firstName} ${user.lastName}</h2>
-                            <img src="user.png" class="rounded-circle" width="200" height="200" alt="user">
+                            <img src="http://localhost:8080/images/user.png" class="rounded-circle" width="200" height="200" alt="user">
                         </div>
                         <div class="col-sm-6">
                                 <h2>Information:</h2>

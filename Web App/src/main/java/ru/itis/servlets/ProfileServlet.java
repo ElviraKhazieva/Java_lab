@@ -18,6 +18,8 @@ import ru.itis.services.UsersService;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -46,18 +48,9 @@ public class ProfileServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
         HttpSession session = request.getSession();
         User user = (User) session.getAttribute("User");
-        Map<String, Object> attributes = new HashMap<>();
-        attributes.put("user", user);
         PrintWriter fileWriter = response.getWriter();
-        template.process(attributes, fileWriter);
+        template.process(Collections.singletonMap("user", user), fileWriter);
         fileWriter.close();
-
-        /* другой вариант - не очень
-        //FileWriter fileWriter = new FileWriter("output.txt");
-        FileWriter fileWriter = new FileWriter("C:/Users/user/Documents/Java_lab/Web App/src/main/webapp/WEB-INF/html/profile.html");
-        template.process(attributes, fileWriter);
-        request.getRequestDispatcher("/WEB-INF/html/profile.html").forward(request, response);
-        */
     }
 
     @Override

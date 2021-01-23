@@ -9,8 +9,11 @@ import lombok.*;
 public class CookieValue {
 
     private Long id;
+
     private String name;
+
     private String value;
+
     private User user;
 
 }

@@ -3,6 +3,7 @@ package ru.itis.servlets;
 
 import org.springframework.context.ApplicationContext;
 import ru.itis.models.User;
+import ru.itis.services.RegistrationService;
 import ru.itis.services.UsersService;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -14,15 +15,13 @@ import java.io.IOException;
 @WebServlet("/registration")
 public class RegistrationServlet extends HttpServlet {
 
-    private UsersService usersService;
+    private RegistrationService registrationService;
 
     @Override
     public void init(ServletConfig config) throws ServletException {
         ServletContext servletContext = config.getServletContext();
         ApplicationContext applicationContext = (ApplicationContext) servletContext.getAttribute("applicationContext");
-        usersService = applicationContext.getBean(UsersService.class);
-        //this.usersService = (UsersService) servletContext.getAttribute("usersService");
-
+        registrationService = applicationContext.getBean(RegistrationService.class);;
     }
 
     @Override
@@ -37,7 +36,7 @@ public class RegistrationServlet extends HttpServlet {
         String groupNumber = request.getParameter("groupNumber");
         String email = request.getParameter("email");
         String password = request.getParameter("password");
-        String hashPassword = usersService.getHashPassword(password);
+        String hashPassword = registrationService.getHashPassword(password);
         User user = User.builder()
                 .firstName(firstName)
                 .lastName(lastName)
@@ -46,7 +45,7 @@ public class RegistrationServlet extends HttpServlet {
                 .email(email)
                 .hashPassword(hashPassword)
                 .build();
-        String uuid = usersService.register(user);
+        String uuid = registrationService.register(user);
         Cookie cookie = new Cookie("Auth", uuid);
         cookie.setMaxAge(60 * 60 * 24 * 365);
         response.addCookie(cookie);

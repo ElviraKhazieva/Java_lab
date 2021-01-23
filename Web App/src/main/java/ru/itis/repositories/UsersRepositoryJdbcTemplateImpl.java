@@ -41,6 +41,7 @@ public class UsersRepositoryJdbcTemplateImpl implements UsersRepository {
             .firstName(row.getString("first_name"))
             .lastName(row.getString("last_name"))
             .email(row.getString("email"))
+            .hashPassword(row.getString("password"))
             .groupNumber(row.getString("group_number"))
             .age(row.getInt("age"))
             .build();
@@ -100,6 +101,7 @@ public class UsersRepositoryJdbcTemplateImpl implements UsersRepository {
         params.put("hashPassword", entity.getHashPassword());
         params.put("age", entity.getAge());
         params.put("groupNumber", entity.getGroupNumber());
+        params.put("id", entity.getId());
         namedParameterJdbcTemplate.update(SQL_UPDATE, params);
     }
 
