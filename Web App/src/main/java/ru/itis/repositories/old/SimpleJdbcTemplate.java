@@ -33,7 +33,7 @@
 //            }
 //            return result;
 //        } catch (SQLException throwables) {
-//            throw new IllegalArgumentException();
+//            throw new IllegalArgumentException(throwables);
 //        } finally {
 //            if (resultSet != null) {
 //                try {
@@ -58,6 +58,46 @@
 //            }
 //        }
 //    }
+//    public <T> T queryForOne(String sql, RowMapper<T> rowMapper, Object ... args) {
+//        Connection connection = null;
+//        PreparedStatement statement = null;
+//        ResultSet resultSet = null;
+//        try {
+//            connection = dataSource.getConnection();
+//            statement = connection.prepareStatement(sql);
+//            for (int i = 0; i < args.length; i++) {
+//                statement.setObject(i + 1, args[i]);
+//            }
+//            resultSet = statement.executeQuery();
+//            resultSet.next();
+//            return rowMapper.mapRow(resultSet);
+//        } catch (SQLException throwables) {
+//            throw new IllegalArgumentException(throwables);
+//        } finally {
+//            if (resultSet != null) {
+//                try {
+//                    resultSet.close();
+//                } catch (SQLException throwables) {
+//                    //ignore
+//                }
+//            }
+//            if (statement != null) {
+//                try {
+//                    statement.close();
+//                } catch (SQLException throwables) {
+//                    // ignore
+//                }
+//            }
+//            if (connection != null) {
+//                try {
+//                    connection.close();
+//                } catch (SQLException throwables) {
+//                    // ignore
+//                }
+//            }
+//        }
+//    }
+
 //
 //    public <T> void UpdateOrDeleteQuery(String sql, RowMapper<T> rowMapper, Object ... args) {
 //        Connection connection = null;
@@ -70,7 +110,7 @@
 //            }
 //            statement.execute();
 //        } catch (SQLException throwables) {
-//            throw new IllegalArgumentException();
+//            throw new IllegalArgumentException(throwables);
 //        } finally {
 //            if (statement != null) {
 //                try {
