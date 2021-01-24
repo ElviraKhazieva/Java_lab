@@ -38,3 +38,6 @@
 
 ### В Spring MVC:
 [WebApp_CSRF_MVC](https://github.com/ElviraKhazieva/Java_lab/tree/master/WebApp_CSRF_MVC)
+
+## Недоделанная семестровая работа
+[SemesterWork1](https://github.com/ElviraKhazieva/Java_lab/tree/master/SemesterWork1)
