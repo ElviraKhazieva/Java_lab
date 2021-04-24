@@ -34,7 +34,7 @@ public class SimpleJdbcTemplate {
             }
             return result;
         } catch (SQLException throwables) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException(throwables);
         } finally {
             if (resultSet != null) {
                 try {
