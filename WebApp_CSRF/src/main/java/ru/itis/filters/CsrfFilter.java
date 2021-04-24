@@ -39,7 +39,7 @@ public class CsrfFilter implements Filter {
 
         if (request.getMethod().equals("GET")) {
             String csrf = UUID.randomUUID().toString();
-            Set<String> csrfTokens = (HashSet<String>) request.getSession().getAttribute("_csrf_token");
+            HashSet<String> csrfTokens = (HashSet<String>) request.getSession().getAttribute("_csrf_token");
             if (csrfTokens != null) {
                 csrfTokens.add(csrf);
             } else {
@@ -49,7 +49,7 @@ public class CsrfFilter implements Filter {
             }
             request.setAttribute("_csrf_token", csrf);
         }
-        
+
         filterChain.doFilter(servletRequest, servletResponse);
 
     }

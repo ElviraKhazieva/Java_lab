@@ -42,7 +42,6 @@ public class UsersRepositoryJdbcImpl implements UsersRepository {
             .confirmCode(row.getString("confirm_code"))
             .hashPassword(row.getString("password"))
             .email(row.getString("email"))
-            .isDeleted(false)
             .build();
 
     @Override
