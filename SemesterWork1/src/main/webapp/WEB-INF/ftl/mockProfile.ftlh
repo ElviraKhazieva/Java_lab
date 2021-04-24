@@ -1,3 +1,4 @@
+<#ftl encoding="UTF-8"/>
 <html lang="en">
 <head>
     <title>My Profile</title>
