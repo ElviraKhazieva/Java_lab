@@ -13,7 +13,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "account")
-public class User implements Serializable {
+public class User {
 
     private static final long serialVersionUID = 1L;
 
@@ -72,6 +72,8 @@ public class User implements Serializable {
     @Enumerated(value = EnumType.STRING)
     private ProfileState profileState;
 
+    private Boolean isDeleted;
+
     public enum EmailState {
         CONFIRMED, NOT_CONFIRMED
     }
@@ -84,6 +86,9 @@ public class User implements Serializable {
         USER, ADMIN
     }
 
+    public boolean isDeleted() {
+        return isDeleted;
+    }
     public boolean isActive() {
         return this.profileState == ProfileState.ACTIVE;
     }

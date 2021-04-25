@@ -11,64 +11,41 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import ru.itis.rest.security.token.TokenAuthentication;
+import ru.itis.rest.security.token.TokenAuthenticationFilter;
+import ru.itis.rest.security.token.TokenAuthenticationProvider;
 
 import javax.sql.DataSource;
 
-@Configuration
+//@Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private TokenAuthenticationFilter tokenAuthenticationFilter;
 
     @Autowired
-    @Qualifier("customUserDetailsService")
-    private UserDetailsService userDetailsService;
-
-    @Autowired
-    private DataSource dataSource;
-
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(passwordEncoder);
-    }
+    private TokenAuthenticationProvider tokenAuthenticationProvider;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        //http.csrf().disable();
+        http.csrf().disable();
+        http.sessionManagement().disable();
         http
-//                .authorizeRequests()
-//                .antMatchers("/signUp").permitAll()
-//                .antMatchers("/profile").authenticated()
-//                .antMatchers("/users").hasAuthority("ADMIN")
-//                .antMatchers("/banAll").hasAuthority("ADMIN")
-//                .and()
-                .formLogin()
-                .loginPage("/signIn")
-                .usernameParameter("username")
-                .defaultSuccessUrl("/profile")
-                .failureUrl("/signIn&error")
-                .and()
-                .logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout", "GET"))
-                .invalidateHttpSession(true)
-                .deleteCookies("JSESSIONID")
-                .and()
-                .rememberMe()
-                .rememberMeParameter("remember-me").tokenRepository(persistentTokenRepository());
+                .addFilterAt(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .sessionManagement().disable();
 
 
     }
 
-    @Bean
-    public PersistentTokenRepository persistentTokenRepository() {
-        JdbcTokenRepositoryImpl jdbcTokenRepository= new JdbcTokenRepositoryImpl();
-        jdbcTokenRepository.setDataSource(dataSource);
-        return jdbcTokenRepository;
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(tokenAuthenticationProvider);
     }
+
+
 }

@@ -10,6 +10,8 @@ import ru.itis.rest.models.User;
 import ru.itis.rest.repositories.UsersRepository;
 import java.util.List;
 
+import static ru.itis.rest.dto.UserDto.from;
+
 @Service
 public class UsersServiceImpl implements UsersService {
 
@@ -23,13 +25,13 @@ public class UsersServiceImpl implements UsersService {
     @Override
     public UserDto getById(Long id) {
         User user = usersRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        return UserDto.from(user);
+        return from(user);
     }
 
     @Override
     public UserDto getByUsername(String username) {
        User user = usersRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-       return UserDto.from(user);
+       return from(user);
     }
 
     @Override
@@ -39,7 +41,7 @@ public class UsersServiceImpl implements UsersService {
 
     @Override
     public List<UserDto> getAllUsers() {
-        return UserDto.from(usersRepository.findAll());
+        return from(usersRepository.findAll());
     }
 
     @Override
@@ -52,22 +54,12 @@ public class UsersServiceImpl implements UsersService {
         return SimpleUserDto.from(usersRepository.findAllByFollowersContains(user));
     }
 
-//    @Override
-//    public void subscribe(User userFrom, User userTo) {
-//        usersRepository.subscribe(userFrom, userTo);
-//    }
-//
-//    @Override
-//    public void unsubscribe(User userFrom, User userTo) {
-//        usersRepository.unsubscribe(userFrom, userTo);
-//    }
-
     @Override
     public UserDto confirmMail(String confirmCode) {
         User user = usersRepository.findByConfirmCode(confirmCode).orElseThrow(() -> new UsernameNotFoundException("User not found"));
         user.setEmailState(User.EmailState.CONFIRMED);
         usersRepository.save(user);
-        return UserDto.from(user);
+        return from(user);
     }
 
     @Override
@@ -79,6 +71,37 @@ public class UsersServiceImpl implements UsersService {
                 usersRepository.save(user);
             }
         }
+    }
+
+    @Override
+    public UserDto addUser(UserDto user) {
+        User newUser = User.builder()
+                .firstName(user.getFirstName())
+                .lastName(user.getLastName())
+                .username(user.getUsername())
+                .email(user.getEmail())
+                .build();
+
+        usersRepository.save(newUser);
+        return from(newUser);
+    }
+
+    @Override
+    public UserDto updateUser(Long userId, UserDto user) {
+        User userForUpdate = usersRepository.findById(userId)
+                .orElseThrow(IllegalArgumentException::new);
+        userForUpdate.setFirstName(user.getFirstName());
+        userForUpdate.setLastName(user.getLastName());
+        usersRepository.save(userForUpdate);
+        return from(userForUpdate);
+    }
+
+    @Override
+    public void deleteUser(Long userId) {
+        User userForDelete = usersRepository.findById(userId)
+                .orElseThrow(IllegalArgumentException::new);
+        userForDelete.setIsDeleted(true);
+        usersRepository.save(userForDelete);
     }
 
 }

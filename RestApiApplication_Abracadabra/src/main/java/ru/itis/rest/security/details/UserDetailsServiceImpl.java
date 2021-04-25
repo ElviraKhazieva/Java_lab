@@ -6,19 +6,21 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
+import ru.itis.rest.models.Token;
 import ru.itis.rest.models.User;
+import ru.itis.rest.repositories.TokensRepository;
 import ru.itis.rest.repositories.UsersRepository;
 
-@Service("customUserDetailsService")
+@Service("tokenUserDetailsService")
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    private UsersRepository usersRepository;
+    private TokensRepository tokensRepository;
 
     @Override
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        User user = usersRepository.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException("User not found"));
-        return new ru.itis.rest.security.details.UserDetailsImpl(user);
+    public UserDetails loadUserByUsername(String token) throws UsernameNotFoundException {
+        Token result = tokensRepository.findByToken(token).orElseThrow(() -> new UsernameNotFoundException("Token not found"));
+        return new UserDetailsImpl(result.getUser());
 
     }
 }
