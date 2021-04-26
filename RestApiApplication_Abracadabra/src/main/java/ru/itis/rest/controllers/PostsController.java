@@ -29,7 +29,6 @@ public class PostsController {
     @Autowired
     private PostsService postsService;
 
-    @PreAuthorize("isAuthenticated()")
     @GetMapping("/users/{user-id}/posts")
     public ResponseEntity<List<PostDto>> getPostsByUser(@PathVariable("user-id") Long userId) {
         return ResponseEntity.ok(postsService.getAllByAuthorId(userId));
@@ -37,7 +36,6 @@ public class PostsController {
 
     @ApiOperation(value = "Добавление поста")
     @ApiResponses(value = {@ApiResponse(code = 200, message = "Пост успешно добавлен", response = PostDto.class)})
-    @PreAuthorize("isAuthenticated()")
     @PostMapping("/compose/post")
     public ResponseEntity<PostDto> addPost(@RequestBody PostForm post, @AuthenticationPrincipal UserDetailsImpl userDetails) {
         return ResponseEntity.ok(PostDto.from(postsService.addPost(post, userDetails.getUser())));

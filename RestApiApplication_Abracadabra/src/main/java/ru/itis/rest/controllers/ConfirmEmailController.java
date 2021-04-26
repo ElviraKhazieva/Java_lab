@@ -17,7 +17,6 @@ public class ConfirmEmailController {
     @Autowired
     private UsersService usersService;
 
-    @PreAuthorize("isAuthenticated()")
     @GetMapping("/confirm/{confirm_code}")
     public ResponseEntity<UserDto> confirmMail(@PathVariable("confirm_code") String confirmCode, Model model) {
         return ResponseEntity.ok(usersService.confirmMail(confirmCode));

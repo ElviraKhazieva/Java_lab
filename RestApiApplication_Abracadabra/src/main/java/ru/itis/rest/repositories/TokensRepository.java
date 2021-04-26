@@ -1,12 +1,13 @@
 package ru.itis.rest.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import ru.itis.rest.models.Token;
+import ru.itis.rest.models.RefreshToken;
 
 import java.util.Optional;
 
-public interface  TokensRepository extends JpaRepository<Token, Long> {
+public interface  TokensRepository extends JpaRepository<RefreshToken, Long> {
 
-    Optional<Token> findByToken(String token);
+    Optional<RefreshToken> findByToken(String token);
+
 
 }

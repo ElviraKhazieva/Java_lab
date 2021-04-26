@@ -12,12 +12,15 @@ public class UserDetailsImpl implements UserDetails {
 
     private User user;
 
+    private boolean expired;
+
     public User getUser() {
         return user;
     }
 
-    public UserDetailsImpl(User user) {
+    public UserDetailsImpl(User user, boolean expired) {
         this.user = user;
+        this.expired = expired;
     }
 
     @Override
@@ -48,11 +51,15 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return true;
+        return !expired;
     }
 
     @Override
     public boolean isEnabled() {
         return user.isActive();
+    }
+
+    public void setExpired(boolean expired) {
+        this.expired = expired;
     }
 }

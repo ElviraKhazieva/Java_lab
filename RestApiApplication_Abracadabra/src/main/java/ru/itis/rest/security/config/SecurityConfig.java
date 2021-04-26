@@ -21,7 +21,7 @@ import ru.itis.rest.security.token.TokenAuthenticationProvider;
 
 import javax.sql.DataSource;
 
-//@Configuration
+@Configuration
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -37,6 +37,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().disable();
         http
                 .addFilterAt(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .authorizeRequests()
+                .antMatchers("/users").hasAuthority("ADMIN")
+                .antMatchers("/login").permitAll()
+                .antMatchers("/refresh").permitAll()
+                .and()
                 .sessionManagement().disable();
 
 

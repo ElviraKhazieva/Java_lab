@@ -13,10 +13,10 @@ public class TokenAuthentication implements Authentication {
 
     private boolean isAuthenticated;
 
-    private String token;
+    private String accessToken;
 
-    public TokenAuthentication(String token) {
-        this.token = token;
+    public TokenAuthentication(String accessToken) {
+        this.accessToken = accessToken;
     }
 
     public void setUserDetails(UserDetails userDetails) {
@@ -30,7 +30,7 @@ public class TokenAuthentication implements Authentication {
 
     @Override
     public Object getCredentials() {
-        return userDetails.getPassword();
+        return accessToken;
     }
 
     @Override
@@ -57,6 +57,9 @@ public class TokenAuthentication implements Authentication {
 
     @Override
     public String getName() {
-        return token;
+        if (userDetails != null) {
+            return userDetails.getUsername();
+        }
+        else return null;
     }
 }

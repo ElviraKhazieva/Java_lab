@@ -5,4 +5,5 @@ import ru.itis.rest.dto.TokenDto;
 
 public interface LoginService {
     TokenDto login(EmailPasswordDto emailPassword);
+    TokenDto login(String refreshToken);
 }

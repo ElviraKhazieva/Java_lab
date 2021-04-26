@@ -74,19 +74,6 @@ public class UsersServiceImpl implements UsersService {
     }
 
     @Override
-    public UserDto addUser(UserDto user) {
-        User newUser = User.builder()
-                .firstName(user.getFirstName())
-                .lastName(user.getLastName())
-                .username(user.getUsername())
-                .email(user.getEmail())
-                .build();
-
-        usersRepository.save(newUser);
-        return from(newUser);
-    }
-
-    @Override
     public UserDto updateUser(Long userId, UserDto user) {
         User userForUpdate = usersRepository.findById(userId)
                 .orElseThrow(IllegalArgumentException::new);
