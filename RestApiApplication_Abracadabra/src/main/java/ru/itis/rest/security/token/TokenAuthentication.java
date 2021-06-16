@@ -4,7 +4,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import ru.itis.rest.security.details.UserDetailsImpl;
-
 import java.util.Collection;
 
 public class TokenAuthentication implements Authentication {

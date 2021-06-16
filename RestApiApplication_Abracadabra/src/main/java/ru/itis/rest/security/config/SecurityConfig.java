@@ -1,32 +1,32 @@
 package ru.itis.rest.security.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
-import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
-import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
-import ru.itis.rest.security.token.TokenAuthentication;
-import ru.itis.rest.security.token.TokenAuthenticationFilter;
+import org.springframework.security.web.authentication.logout.LogoutFilter;
+import ru.itis.rest.security.token.JwtAuthenticationFilter;
+import ru.itis.rest.security.token.JwtLogoutFilter;
+import ru.itis.rest.security.token.RefreshFilter;
 import ru.itis.rest.security.token.TokenAuthenticationProvider;
-
-import javax.sql.DataSource;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private TokenAuthenticationFilter tokenAuthenticationFilter;
+    private JwtLogoutFilter jwtLogoutFilter;
+
+    @Autowired
+    private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+    @Autowired
+    private RefreshFilter refreshFilter;
 
     @Autowired
     private TokenAuthenticationProvider tokenAuthenticationProvider;
@@ -36,10 +36,14 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.csrf().disable();
         http.sessionManagement().disable();
         http
-                .addFilterAt(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(refreshFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAt(jwtLogoutFilter, LogoutFilter.class)
                 .authorizeRequests()
+                .antMatchers("/users/**").hasAuthority("ADMIN")
                 .antMatchers("/users").hasAuthority("ADMIN")
                 .antMatchers("/login").permitAll()
+                .antMatchers("/logout").hasAnyAuthority()
                 .antMatchers("/refresh").permitAll()
                 .and()
                 .sessionManagement().disable();

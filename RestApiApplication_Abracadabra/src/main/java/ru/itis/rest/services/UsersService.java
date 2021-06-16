@@ -6,7 +6,6 @@ import ru.itis.rest.dto.UserDto;
 import ru.itis.rest.models.User;
 import java.util.List;
 
-@Service
 public interface UsersService {
 
     UserDto getById(Long id);
@@ -25,7 +24,13 @@ public interface UsersService {
 
     void banAll();
 
+    void subscribe(Long userFrom, Long userTo);
+
+    void unsubscribe(Long userFrom, Long userTo);
+
     UserDto updateUser(Long userId, UserDto user);
 
     void deleteUser(Long userId);
+
+    void blockUser(Long userId);
 }

@@ -1,4 +1,4 @@
-package ru.itis.rest.security.token;
+package ru.itis.rest.exceptions;
 
 import org.springframework.security.core.AuthenticationException;
 

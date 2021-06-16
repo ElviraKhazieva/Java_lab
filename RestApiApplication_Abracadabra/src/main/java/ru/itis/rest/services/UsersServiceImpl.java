@@ -7,8 +7,10 @@ import org.springframework.stereotype.Service;
 import ru.itis.rest.dto.SimpleUserDto;
 import ru.itis.rest.dto.UserDto;
 import ru.itis.rest.models.User;
+import ru.itis.rest.redis.services.RedisUsersService;
 import ru.itis.rest.repositories.UsersRepository;
 import java.util.List;
+import java.util.Optional;
 
 import static ru.itis.rest.dto.UserDto.from;
 
@@ -16,11 +18,16 @@ import static ru.itis.rest.dto.UserDto.from;
 public class UsersServiceImpl implements UsersService {
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
     private UsersRepository usersRepository;
 
+    @Autowired
+    private RedisUsersService redisUsersService;
+
+    @Override
+    public void blockUser(Long userId) {
+        User user = usersRepository.findById(userId).orElseThrow(IllegalArgumentException::new);
+        redisUsersService.addAllTokensToBlackList(user);
+    }
 
     @Override
     public UserDto getById(Long id) {
@@ -72,6 +79,34 @@ public class UsersServiceImpl implements UsersService {
             }
         }
     }
+
+    @Override
+    public void subscribe(Long userFrom, Long userTo) {
+        User from = usersRepository.getOne(userFrom);
+        User to = usersRepository.getOne(userTo);
+        if (!isSubscribed(from, to)) {
+            from.getSubscriptions().add(to);
+            to.getFollowers().add(from);
+            usersRepository.save(from);
+        }
+
+    }
+
+    private boolean isSubscribed(User from, User to) {
+        return from.getSubscriptions().contains(to);
+    }
+
+    @Override
+    public void unsubscribe(Long userFrom, Long userTo) {
+        User from = usersRepository.getOne(userFrom);
+        User to = usersRepository.getOne(userTo);
+        if (isSubscribed(from, to)) {
+            from.getSubscriptions().remove(to);
+            to.getFollowers().remove(from);
+            usersRepository.save(from);
+        }
+    }
+
 
     @Override
     public UserDto updateUser(Long userId, UserDto user) {

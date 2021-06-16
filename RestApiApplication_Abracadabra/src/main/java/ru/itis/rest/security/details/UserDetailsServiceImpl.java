@@ -17,9 +17,6 @@ import ru.itis.rest.utils.JwtUtil;
 public class UserDetailsServiceImpl implements UserDetailsService {
 
     @Autowired
-    private TokensRepository tokensRepository;
-
-    @Autowired
     private JwtUtil jwtUtil;
 
     @Override
@@ -31,11 +28,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .profileState(decodedToken.getProfileState())
                 .hashPassword("")
                 .build();
-        log.info(String.valueOf(decodedToken.getExpiration().getTime()));
-        log.info(String.valueOf(System.currentTimeMillis()));
+        System.out.println(user);
         boolean expired = decodedToken.getExpiration().getTime() < System.currentTimeMillis();
-        UserDetails userDetails = new UserDetailsImpl(user, expired);
-//        RefreshToken result = tokensRepository.findByToken(token).orElseThrow(() -> new UsernameNotFoundException("Token not found"));
-          return userDetails;
+        return new UserDetailsImpl(user, expired);
     }
+
 }

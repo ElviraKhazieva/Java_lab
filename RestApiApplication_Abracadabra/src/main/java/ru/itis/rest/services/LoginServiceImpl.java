@@ -10,15 +10,13 @@ import ru.itis.rest.dto.EmailPasswordDto;
 import ru.itis.rest.dto.TokenDto;
 import ru.itis.rest.models.RefreshToken;
 import ru.itis.rest.models.User;
+import ru.itis.rest.redis.services.RedisUsersService;
 import ru.itis.rest.repositories.TokensRepository;
 import ru.itis.rest.repositories.UsersRepository;
-import ru.itis.rest.security.token.TokenExpiredException;
 import ru.itis.rest.utils.JwtUtil;
 
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.Optional;
-import java.util.UUID;
 
 @Service
 public class LoginServiceImpl implements LoginService {
@@ -34,6 +32,9 @@ public class LoginServiceImpl implements LoginService {
 
     @Autowired
     private TokensRepository tokensRepository;
+
+    @Autowired
+    private RedisUsersService redisUsersService;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -60,6 +61,7 @@ public class LoginServiceImpl implements LoginService {
                     .build();
 
             String accessToken = jwtUtil.generateToken(userData);
+            redisUsersService.addTokenToUser(user, accessToken);
 
             return TokenDto.from(refreshToken, accessToken);
         } else {
@@ -72,9 +74,6 @@ public class LoginServiceImpl implements LoginService {
         Optional<RefreshToken> refreshTokenOptional = tokensRepository.findByToken(refreshToken);
         RefreshToken token = refreshTokenOptional.orElseThrow(() -> new UsernameNotFoundException("Token not found"));
 
-        if (token.getExpiration().getTime() < System.currentTimeMillis()) {
-            throw new TokenExpiredException("token expired");
-        }
         token.setToken(jwtUtil.generateRefreshToken());
         tokensRepository.save(token);
 
@@ -86,6 +85,7 @@ public class LoginServiceImpl implements LoginService {
                 .profileState(user.getProfileState())
                 .build();
         String accessToken = jwtUtil.generateToken(userData);
+        redisUsersService.addTokenToUser(user, accessToken);
 
         return TokenDto.from(token, accessToken);
     }

@@ -68,6 +68,7 @@ public class JwtUtilImpl implements JwtUtil {
 
     @Override
     public DecodedAccessToken decode(String token) {
+
         DecodedJWT decodedJWT = JWT.require(Algorithm.HMAC256(secret))
                 .build()
                 .verify(token);

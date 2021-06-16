@@ -8,6 +8,7 @@ import org.springframework.beans.propertyeditors.ReaderEditor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import ru.itis.rest.dto.TokenDto;
 import ru.itis.rest.dto.UserDto;
 import ru.itis.rest.dto.UserSignUpForm;
 import ru.itis.rest.models.User;
@@ -21,23 +22,29 @@ public class UsersController {
     @Autowired
     private UsersService usersService;
 
+    @ApiOperation(value = "Получение всех пользователей")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Успешно получены")})
     @GetMapping("/users")
     public ResponseEntity<List<UserDto>> getAllUsers(@RequestHeader("JWT-TOKEN") String token) {
         return ResponseEntity.ok(usersService.getAllUsers());
     }
 
-
-
-    @PreAuthorize("hasAuthority('ADMIN')")
     @PutMapping("/users/{user-id}")
     public ResponseEntity<UserDto> updateUser(@PathVariable("user-id") Long userId, @RequestBody UserDto user) {
         return ResponseEntity.ok(usersService.updateUser(userId, user));
     }
 
-    @PreAuthorize("hasAuthority('ADMIN')")
     @DeleteMapping("/users/{user-id}")
-    public ResponseEntity<?> deleteTeacher(@PathVariable("user-id") Long userId) {
+    public ResponseEntity<?> deleteUser(@PathVariable("user-id") Long userId) {
         usersService.deleteUser(userId);
+        return ResponseEntity.ok().build();
+    }
+
+    @ApiOperation(value = "Блокировка пользователя")
+    @ApiResponses(value = {@ApiResponse(code = 200, message = "Успешно заблокирован")})
+    @PostMapping("/users/{user-id}/block")
+    public ResponseEntity<?> blockUser(@RequestHeader("JWT-TOKEN") String token, @PathVariable("user-id") Long userId) {
+        usersService.blockUser(userId);
         return ResponseEntity.ok().build();
     }
 

@@ -9,6 +9,7 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
+import ru.itis.rest.exceptions.InvalidTokenException;
 import ru.itis.rest.utils.JwtUtil;
 
 @Component
@@ -29,12 +30,11 @@ public class TokenAuthenticationProvider implements AuthenticationProvider {
             throw new InvalidTokenException("Invalid token");
         }
         UserDetails userDetails = userDetailsService.loadUserByUsername((String) tokenAuthentication.getCredentials());
-        log.info(String.valueOf(userDetails.isCredentialsNonExpired()));
         if (userDetails.isCredentialsNonExpired()) {
             tokenAuthentication.setAuthenticated(true);
         }
         tokenAuthentication.setUserDetails(userDetails);
-        return tokenAuthentication ;
+        return tokenAuthentication;
     }
 
     @Override

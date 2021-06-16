@@ -16,36 +16,9 @@ import java.util.concurrent.Executors;
 @Configuration
 public class ApplicationConfig {
 
-//    @Bean
-//    public FreeMarkerViewResolver freemarkerViewResolver() {
-//        FreeMarkerViewResolver resolver = new FreeMarkerViewResolver();
-//        resolver.setPrefix("");
-//        resolver.setSuffix(".ftlh");
-//        resolver.setContentType("text/html;charset=UTF-8");
-//        return resolver;
-//    }
-
-//    @Bean
-//    public FreeMarkerConfigurer freemarkerConfig() {
-//        FreeMarkerConfigurer configurer = new FreeMarkerConfigurer();
-//        configurer.setTemplateLoaderPath("classpath:templates/");
-//        return configurer;
-//    }
-
     @Bean
     public ExecutorService executorService() {
         return Executors.newCachedThreadPool();
-    }
-
-    @Bean
-    public freemarker.template.Configuration configuration() {
-        freemarker.template.Configuration configuration = new freemarker.template.Configuration(freemarker.template.Configuration.VERSION_2_3_30);
-        configuration.setDefaultEncoding("UTF-8");
-        configuration.setTemplateLoader(
-                new SpringTemplateLoader(new ClassRelativeResourceLoader(this.getClass()),
-                        "/"));
-        configuration.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
-        return configuration;
     }
 
     @Bean(name = "multipartResolver")
@@ -54,4 +27,5 @@ public class ApplicationConfig {
         multipartResolver.setMaxUploadSize(100000000);
         return multipartResolver;
     }
+
 }

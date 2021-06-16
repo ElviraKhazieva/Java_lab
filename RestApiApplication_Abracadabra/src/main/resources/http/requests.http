@@ -1,2 +1,25 @@
+###
+POST http://localhost/signUp
+Content-Type: application/json
 
+{"email": "Khaz.elvira@yandex.ru",
+  "firstName": "Elvira",
+  "lastName": "Khazieva",
+  "password": "556677",
+  "username": "khelvira"}
+
+###
+POST http://localhost/login
+Content-Type: application/json
+
+{"email":"Khaz.elvira@yandex.ru",
+  "password":"556677"}
+
+###
+GET http://localhost/users
+JWT-TOKEN:eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMiIsInJvbGUiOiJBRE1JTiIsInN0YXRlIjoiQUNUSVZFIiwiZXhwIjoxNjIyNzUwNTc1LCJlbWFpbCI6IktoYXouZWx2aXJhQHlhbmRleC5ydSJ9.S9j40a6ra-ZlO2Ik05TWReoTf-uFxnTV-YVjfQmqC2I
+
+###
+POST http://localhost/users/11/block
+JWT-TOKEN:eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxMiIsInJvbGUiOiJVU0VSIiwic3RhdGUiOiJBQ1RJVkUiLCJleHAiOjE2MjI3NTAzNDUsImVtYWlsIjoiS2hhei5lbHZpcmFAeWFuZGV4LnJ1In0.k4tJ7UuYFLV445nEke95ykG1SyirsHKRnvZl0OAK4Eo
 
