@@ -45,7 +45,7 @@ public class SignUpServiceImpl implements SignUpService {
                 .email(userForm.getEmail())
                 .hashPassword(passwordEncoder.encode(userForm.getPassword()))
                 .role(User.Role.USER)
-                .state(User.State.ACTIVE)
+                .profileState(User.ProfileState.ACTIVE)
                 .emailState(User.EmailState.NOT_CONFIRMED)
                 .confirmCode(UUID.randomUUID().toString())
                 .build();

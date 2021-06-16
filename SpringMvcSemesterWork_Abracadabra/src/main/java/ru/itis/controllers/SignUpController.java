@@ -7,6 +7,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import ru.itis.aspects.MethodCounting;
 import ru.itis.dto.UserSignUpForm;
 import ru.itis.models.User;
 import ru.itis.services.SignUpService;
@@ -21,6 +22,7 @@ public class SignUpController {
     private SignUpService signUpService;
 
     @PermitAll
+    @MethodCounting
     @GetMapping("/signUp")
      public String getSignUpPage(Model model) {
         model.addAttribute("userForm", new UserSignUpForm());
@@ -28,6 +30,7 @@ public class SignUpController {
     }
 
     @PermitAll
+    @MethodCounting
     @PostMapping("/signUp")
     public String signUp(@Valid @ModelAttribute("userForm") UserSignUpForm form, BindingResult bindingResult, Model model) {
         if (bindingResult.hasErrors()) {

@@ -17,9 +17,4 @@ public interface UsersRepository extends JpaRepository<User, Long> {
 
     List<User> findAllByFollowersContains(User user);//подписки юзера
 
-
-
-
-
-
 }

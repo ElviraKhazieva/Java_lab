@@ -3,10 +3,7 @@ package ru.itis.config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import freemarker.template.TemplateExceptionHandler;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.PropertySource;
+import org.springframework.context.annotation.*;
 import org.springframework.core.env.Environment;
 import org.springframework.core.io.ClassRelativeResourceLoader;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
@@ -25,6 +22,7 @@ import java.util.concurrent.Executors;
 
 @EnableWebMvc
 @Configuration
+@EnableAspectJAutoProxy
 @PropertySource(value = "classpath:application.properties")
 @ComponentScan(basePackages = "ru.itis")
 public class ApplicationConfig {

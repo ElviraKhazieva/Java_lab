@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import ru.itis.aspects.MethodCounting;
 import ru.itis.services.SignInService;
 import ru.itis.services.UsersService;
 import javax.annotation.security.PermitAll;
@@ -19,6 +20,7 @@ public class SignInController {
     private UsersService usersService;
 
     @PermitAll
+    @MethodCounting
     @GetMapping("/signIn")
     public String getSignInPage(Model model) {
         return "sign_in_page";

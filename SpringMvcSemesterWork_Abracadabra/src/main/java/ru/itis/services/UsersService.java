@@ -26,5 +26,9 @@ public interface UsersService {
 
     UserDto confirmMail(String confirmCode);
 
+    void subscribe(Long userFrom, Long userTo);
+
+    void unsubscribe(Long userFrom, Long userTo);
+
     void banAll();
 }

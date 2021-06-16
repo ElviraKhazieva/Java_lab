@@ -8,6 +8,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import ru.itis.aspects.MethodCounting;
 import ru.itis.dto.UserDto;
 import ru.itis.models.User;
 import ru.itis.security.details.UserDetailsImpl;
@@ -24,6 +25,7 @@ public class ProfileController {
     private PostsService postsService;
 
     @PreAuthorize("isAuthenticated()")
+    @MethodCounting
     @GetMapping("/profile")
     public String getProfilePage(@AuthenticationPrincipal UserDetailsImpl user, Model model) {
         model.addAttribute("user", user);

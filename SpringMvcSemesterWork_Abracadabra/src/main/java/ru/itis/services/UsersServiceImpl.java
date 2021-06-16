@@ -55,15 +55,32 @@ public class UsersServiceImpl implements UsersService {
         return SimpleUserDto.from(usersRepository.findAllByFollowersContains(user));
     }
 
-//    @Override
-//    public void subscribe(User userFrom, User userTo) {
-//        usersRepository.subscribe(userFrom, userTo);
-//    }
-//
-//    @Override
-//    public void unsubscribe(User userFrom, User userTo) {
-//        usersRepository.unsubscribe(userFrom, userTo);
-//    }
+    @Override
+    public void subscribe(Long userFrom, Long userTo) {
+        User from = usersRepository.getOne(userFrom);
+        User to = usersRepository.getOne(userTo);
+        if (!isSubscribed(from, to)) {
+            from.getSubscriptions().add(to);
+            to.getFollowers().add(from);
+            usersRepository.save(from);
+        }
+
+    }
+
+    private boolean isSubscribed(User from, User to) {
+        return from.getSubscriptions().contains(to);
+    }
+
+    @Override
+    public void unsubscribe(Long userFrom, Long userTo) {
+        User from = usersRepository.getOne(userFrom);
+        User to = usersRepository.getOne(userTo);
+        if (isSubscribed(from, to)) {
+            from.getSubscriptions().remove(to);
+            to.getFollowers().remove(from);
+            usersRepository.save(from);
+        }
+    }
 
     @Override
     public UserDto confirmMail(String confirmCode) {
@@ -78,7 +95,7 @@ public class UsersServiceImpl implements UsersService {
         List<User> users = usersRepository.findAll();
         for (User user: users) {
             if (!user.isAdmin()) {
-                user.setState(User.State.BANNED);
+                user.setProfileState(User.ProfileState.BANNED);
                 usersRepository.save(user);
             }
         }

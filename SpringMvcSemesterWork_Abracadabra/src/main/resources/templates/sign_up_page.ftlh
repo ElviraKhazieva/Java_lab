@@ -36,13 +36,13 @@
                 <input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}">
                 <div>
                     <#assign firstNamePlaceholder><@spring.message 'firstName.placeholder'/></#assign>
-                    <@spring.formInput "userForm.firstName" "class='form-input'" "placeholder='" + firstNamePlaceholder + "'"/>
+                    <@spring.formInput "userForm.firstName" "placeholder='" + firstNamePlaceholder + "'"/>
                     <@spring.showErrors "<br>" "error"/>
 <#--                    <input type="text" name="firstName" id="firstName" placeholder="First Name">-->
                 </div>
                 <div>
                     <#assign lastNamePlaceholder><@spring.message 'lastName.placeholder'/></#assign>
-                    <@spring.formInput "userForm.lastName" "class='form-input'" "placeholder='" + lastNamePlaceholder + "'"/>
+                    <@spring.formInput "userForm.lastName" "placeholder='" + lastNamePlaceholder + "'"/>
                     <@spring.showErrors "<br>" "error"/>
 <#--                    <input type="text" name="lastName" id="lastName" placeholder="Last Name">-->
                 </div>
@@ -51,19 +51,19 @@
 <#--                </div>-->
                 <div>
                     <#assign usernamePlaceholder><@spring.message 'username.placeholder'/></#assign>
-                    <@spring.formInput "userForm.username""class='form-input'" "placeholder='" + usernamePlaceholder + "'"/>
+                    <@spring.formInput "userForm.username" "placeholder='" + usernamePlaceholder + "'"/>
                     <@spring.showErrors "<br>" "error"/>
 <#--                    <input type="text" name="nickname" id="nickname" placeholder="Nickname">-->
                 </div>
                 <div>
                     <#assign emailPlaceholder><@spring.message 'email.placeholder'/></#assign>
-                    <@spring.formInput "userForm.email" "class='form-input'" "placeholder='" + emailPlaceholder + "'"/>
+                    <@spring.formInput "userForm.email" "placeholder='" + emailPlaceholder + "'"/>
                     <@spring.showErrors "<br>" "error"/>
 <#--                    <input type="email"  name="email" class="email" id="email" placeholder="Email">-->
                 </div>
                 <div>
                     <#assign passwordPlaceholder><@spring.message 'password.placeholder'/></#assign>
-                    <@spring.formInput "userForm.password" "class='form-input'" "placeholder='" + passwordPlaceholder + "'"/>
+                    <@spring.formInput "userForm.password" "placeholder='" + passwordPlaceholder + "'"/>
                     <@spring.showErrors "<br>" "error"/>
 <#--                    <input type="password" name="password" class="password" id="password" placeholder="Password">-->
                 </div>
