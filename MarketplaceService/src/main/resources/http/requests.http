@@ -1,0 +1,35 @@
+###
+POST http://localhost:80/products
+Content-Type: application/json
+
+{
+  "id": 0,
+  "name": "наушники JBL",
+  "price": 4990
+}
+
+###
+POST http://localhost:80/orders
+Content-Type: application/json
+
+{
+  "customerEmail": "Khaz.elvira@yandex.ru",
+  "id": 0,
+  "products": [
+    {
+      "id": 1,
+      "name": "ноутбук LENOVO",
+      "price": 49990
+    }
+  ]
+}
+
+###
+GET http://localhost:80/orders?email=Khaz.evira@yandex.ru
+
+###
+GET http://localhost:80/orders?article=39000936-77af-4ac5-a6d0-f30814eb7add
+
+###
+GET http://localhost:80/orders?startDate=2021-08-25T15:10:40&endDate=2021-08-25T15:30:20
+
